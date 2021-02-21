@@ -168,41 +168,5 @@ falseprate
 
 ```
 
-```{r ker}
-library(keras)
-  trainx = cbind(trainmortg,traingen,traincred)
-  testx = cbind(testmortg,testgen,testcred)
-  
-  # create model
-  model <- keras_model_sequential()
-  
-  # define and compile the model
-  model %>%
-    layer_dense(units = 1,input_shape = c(3),use_bias = TRUE) %>%
-    layer_activation_leaky_relu(alpha = 0.01) %>%
-    layer_dense(units = 1, activation = 'sigmoid',use_bias = TRUE) %>%
-    compile(
-      loss = 'mse',
-      optimizer = optimizer_sgd(lr = 0.01,decay=1e-6,momentum = 0.9, nesterov = FALSE),
-      metrics = c('accuracy')
-    )
-  
-  # train 
-  model %>% fit(trainx, trainy, epochs = 100)
-  
-  # evaluate
-  score = model %>% evaluate(testx, testy)
-  g1 = model %>% predict_proba(testx)
-
-```
-
-
-```{r ker test}
-library(pROC)
-roc.info =  roc(testy,g1,plot=TRUE,legacy.axes=TRUE)
-roc.df = data.frame(tpp=roc.info$sensitivities*100,fpp=(1-roc.info$specificities)*100,thresholds=roc.info$thresholds)
-
-roc.df[roc.df$tpp>60,]
-
 
 ```
